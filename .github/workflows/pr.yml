@@ -18,14 +18,34 @@ jobs:
 
       - name: Run build and test command
         run: |
-          ./gradlew build
+          ./gradlew assemble
+
+      - name: Run build and test command
+        run: |
+          ./gradlew test
 
       - name: Run static analysis
         run: ./gradlew detekt
 
       # Uploads results to GitHub repository using the upload-sarif action
       - uses: github/codeql-action/upload-sarif@v3
+        if: always()
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: build/reports/detekt.sarif
           checkout_path: build/reports/
+
+      - name: Generate kover coverage report
+        run: ./gradlew koverXmlReport
+
+      - name: Add coverage report to PR
+        id: kover
+        uses: mi-kas/kover-report@v1
+        with:
+          path: |
+            build/reports/kover/report.xml
+          title: Code Coverage
+          update-comment: true
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          coverage-counter-type: LINE
