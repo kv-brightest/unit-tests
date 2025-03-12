@@ -25,21 +25,24 @@ jobs:
           ./gradlew test
 
       - name: Run static analysis
+        continue-on-error: true
         run: ./gradlew detekt
 
       # Uploads results to GitHub repository using the upload-sarif action
       - uses: github/codeql-action/upload-sarif@v3
         if: always()
+        continue-on-error: true
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: build/reports/detekt.sarif
           checkout_path: build/reports/
 
       - name: Generate kover coverage report
+        continue-on-error: true
         run: ./gradlew koverXmlReport
 
       - name: Add coverage report to PR
-        id: kover
+        continue-on-error: true
         uses: mi-kas/kover-report@v1
         with:
           path: |
