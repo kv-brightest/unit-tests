@@ -1,0 +1,32 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.21'
+    id 'application'
+}
+
+group = 'me.kevinvissers'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.testng:testng:7.1.0'
+}
+
+test {
+    useTestNG()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '16'
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '16'
+}
+
+application {
+    mainClassName = 'MainKt'
+}
