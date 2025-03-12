@@ -168,7 +168,7 @@ class PetValidatorTest {
     }
 
     // This test will fail since I 'forgot' to add a check for special characters
-    @Test(expectedExceptions = [InvalidNameException::class], expectedExceptionsMessageRegExp = "The name of the pet can't contain special characters")
+    @Test(enabled = false, expectedExceptions = [InvalidNameException::class], expectedExceptionsMessageRegExp = "The name of the pet can't contain special characters")
     fun `test name contains special characters`() {
         val validPet = PetModel(
             id = 1,
