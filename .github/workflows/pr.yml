@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Gradle
+        run: |
+          chmod +x gradlew
+          ./gradlew -v
+
+      - name: Run build and test command
+        run: |
+          ./gradlew assemble
+
+      - name: Run build and test command
+        run: |
+          ./gradlew test
+
+      - name: Run static analysis
+        continue-on-error: true
+        run: ./gradlew detekt
+
+      # Uploads results to GitHub repository using the upload-sarif action
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        continue-on-error: true
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: build/reports/detekt.sarif
+          checkout_path: build/reports/
+
+      - name: Generate kover coverage report
+        continue-on-error: true
+        run: ./gradlew koverXmlReport
+
+      - name: Add coverage report to PR
+        continue-on-error: true
+        uses: mi-kas/kover-report@v1
+        with:
+          path: |
+            build/reports/kover/report.xml
+          title: Code Coverage
+          update-comment: true
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          coverage-counter-type: LINE

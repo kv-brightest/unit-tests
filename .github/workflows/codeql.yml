@@ -75,11 +75,12 @@ jobs:
     # to build your code.
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - if: matrix.build-mode == 'manual'
-      shell: bash
+    - name: Setup Gradle and build code
       run: |
-        chmod +X gradlew
-        ./gradlew buld
+        chmod +x gradlew
+        ./gradlew -v
+        ./gradlew assemble
+        ./gradlew testClasses
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
