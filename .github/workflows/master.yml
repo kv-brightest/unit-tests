@@ -1,17 +1,16 @@
-name: PR build
+name: Master build
 
 on:
-  pull_request:
+  push:
     branches: [ "master" ]
 
 jobs:
-  build:
+  master:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
       actions: read
       contents: read
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -41,19 +40,3 @@ jobs:
           # Path to SARIF file relative to the root of the repository
           sarif_file: build/reports/detekt.sarif
           checkout_path: build/reports/
-
-      - name: Generate kover coverage report
-        continue-on-error: true
-        run: ./gradlew koverXmlReport
-
-      - name: Add coverage report to PR
-        continue-on-error: true
-        uses: mi-kas/kover-report@v1
-        with:
-          path: |
-            build/reports/kover/report.xml
-          title: Code Coverage
-          update-comment: true
-          min-coverage-overall: 80
-          min-coverage-changed-files: 80
-          coverage-counter-type: LINE
