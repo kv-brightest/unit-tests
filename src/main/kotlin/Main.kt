@@ -1,7 +1,9 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import bll.PetInventory
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
-    println("Program arguments: ${args.joinToString()}")
+fun main(args: Array<String>) {
+
+    val petInventory: PetInventory = PetInventory()
+    val pet = petInventory.getPetFromStore(99999)
+
+    println("You fetched ${pet?.name} from the store")
 }
